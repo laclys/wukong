@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   build: {
-    base: '/react-visual-editor/',
+    base: '/react-visual-editor/', // 部署基础路径
     outDir: 'docs',
   },
   optimizeDeps: {
