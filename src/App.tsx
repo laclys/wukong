@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react'
 import { useCallbackRef } from './packages/hooks/useCallbackRef'
+import { VisualEditor } from './packages/VisualEditor'
 
 import './app.scss'
 
 export default () => {
-  const [pos, setPos] = useState({
+/*   const [pos, setPos] = useState({
     top: 0,
     left: 0,
   })
@@ -51,12 +52,11 @@ export default () => {
     return {
       mouseDown,
     }
-  })()
+  })() */
 
   return (
     <div className="app-home">
-      <div>hello world</div>
-      <div
+{/*       <div
         style={{
           display: 'inline-flex',
           position: 'relative',
@@ -67,7 +67,8 @@ export default () => {
           background: 'blue',
         }}
         onMouseDown={moveDraggier.mouseDown}
-      ></div>
+      ></div> */}
+      <VisualEditor />
     </div>
   )
 }
