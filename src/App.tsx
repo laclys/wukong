@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
 import { useCallbackRef } from './packages/hooks/useCallbackRef'
 import { VisualEditor } from './packages/VisualEditor'
+import { visualConfig } from './visual.config'
+import { VisualEditorValue } from './packages/VisualEditor.utils'
 
 import './app.scss'
 
@@ -54,6 +56,14 @@ export default () => {
     }
   })() */
 
+  const [editorValue, setEditorValue] = useState({
+    container: {
+      height: 700,
+      width: 1000
+    },
+    block: []
+  } as VisualEditorValue)
+
   return (
     <div className="app-home">
 {/*       <div
@@ -68,7 +78,7 @@ export default () => {
         }}
         onMouseDown={moveDraggier.mouseDown}
       ></div> */}
-      <VisualEditor />
+      <VisualEditor config={visualConfig} value={editorValue}  onChange={setEditorValue}/>
     </div>
   )
 }

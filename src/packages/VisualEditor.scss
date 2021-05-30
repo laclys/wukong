@@ -48,6 +48,42 @@ $primary: #409EFF;
       width: $menuSize;
       background: white;
       border-right: 1px solid $ibc;
+      padding: 20px;
+      box-sizing: border-box;
+
+      .visual-editor-menu-item {
+        position: relative;
+        border: 1px solid $ibc;
+        margin-bottom: 20px;
+        position: relative;
+        padding: 40px 16px 20px 16px;
+        text-align: center;
+
+        &::after {
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          content: '';
+        }
+
+        &:hover {
+          border-color: $primary;
+        }
+      }
+
+      .visual-editor-menu-item-name {
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        padding: 0 20px;
+        line-height: 2em;
+        font-size: 12px;
+        color: white;
+        background: $primary;
+
+      }
     }
 
     &.visual-editor-operator {
