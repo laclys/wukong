@@ -7,7 +7,7 @@ import { VisualEditorValue } from './packages/VisualEditor.utils'
 import './app.scss'
 
 export default () => {
-/*   const [pos, setPos] = useState({
+  /*   const [pos, setPos] = useState({
     top: 0,
     left: 0,
   })
@@ -56,17 +56,26 @@ export default () => {
     }
   })() */
 
-  const [editorValue, setEditorValue] = useState({
-    container: {
-      height: 700,
-      width: 1000
-    },
-    block: []
-  } as VisualEditorValue)
+  const [editorValue, setEditorValue] = useState(() => {
+    const val: VisualEditorValue = {
+      container: {
+        height: 500,
+        width: 800,
+      },
+      block: [
+        {
+          componentKey: 'text',
+          top: 100,
+          left: 100,
+        },
+      ],
+    }
+    return val
+  })
 
   return (
     <div className="app-home">
-{/*       <div
+      {/*       <div
         style={{
           display: 'inline-flex',
           position: 'relative',
@@ -78,7 +87,11 @@ export default () => {
         }}
         onMouseDown={moveDraggier.mouseDown}
       ></div> */}
-      <VisualEditor config={visualConfig} value={editorValue}  onChange={setEditorValue}/>
+      <VisualEditor
+        config={visualConfig}
+        value={editorValue}
+        onChange={setEditorValue}
+      />
     </div>
   )
 }

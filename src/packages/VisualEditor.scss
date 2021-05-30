@@ -15,6 +15,7 @@ $primary: #409EFF;
   right: 20px;
   bottom: 20px;
   left: 20px;
+  overflow: hidden;
 
   &:before {
     position: fixed;
@@ -70,6 +71,7 @@ $primary: #409EFF;
 
         &:hover {
           border-color: $primary;
+          cursor: move;
         }
       }
 
@@ -96,6 +98,9 @@ $primary: #409EFF;
     }
 
     &.visual-editor-body {
+      display: flex;
+      overflow: auto;
+      justify-content: center;
       top: 0;
       bottom: 0;
       left: $menuSize;
@@ -103,6 +108,27 @@ $primary: #409EFF;
       padding-top: $headSize;
       padding-bottom: 300px;
       background: #f6f6f6;
+
+      .visual-editor-container {
+        background: white;
+
+        &::after {
+          position: absolute;
+          content: '';
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
     }
+  }
+}
+
+.visual-editor-container {
+  position: relative;
+
+  .visual-editor-block {
+    position: absolute;
   }
 }
