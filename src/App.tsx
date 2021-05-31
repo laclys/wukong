@@ -67,6 +67,7 @@ export default () => {
           componentKey: 'text',
           top: 100,
           left: 100,
+          ajustPosition: false
         },
       ],
     }

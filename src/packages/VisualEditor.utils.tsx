@@ -3,6 +3,8 @@ export interface VisualEditorBlock {
   componentKey: string 
   top: number
   left: number
+  /* 是否需要调整位置 */
+  ajustPosition: boolean
 }
 
 /* 
@@ -58,7 +60,8 @@ export function createVisualBlock({ top, left, comp }: { top: number, left: numb
   return {
     componentKey: comp.key,
     top,
-    left
+    left,
+    ajustPosition: true
   }
 }
 
