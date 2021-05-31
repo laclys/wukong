@@ -1,9 +1,9 @@
 import { FC, useMemo, useRef } from 'react'
-import { VisualConfig, VisualEditorValue } from './VisualEditor.utils'
+import { useCallbackRef } from './hooks/useCallbackRef'
 import { EditorBlock } from './EditorBlock'
+import { createVisualBlock, VisualConfig, VisualEditorComp, VisualEditorValue } from './VisualEditor.utils'
 
 import './VisualEditor.scss'
-import { useCallbackRef } from './hooks/useCallbackRef'
 
 export const VisualEditor: FC<{
   value: VisualEditorValue
@@ -22,12 +22,19 @@ export const VisualEditor: FC<{
   }, [props.value.container.height, props.value.container.width])
 
   const menuDraggier = (() => {
+
+    const dragDataRef = useRef({
+      dragComp: null as VisualEditorComp | null
+    })
+
     const block = {
-      dragstart: useCallbackRef((e: React.DragEvent<HTMLDivElement>) => {
+      dragstart: useCallbackRef((e: React.DragEvent<HTMLDivElement>, dragComp: VisualEditorComp) => {
         containerRef.current.addEventListener('dragenter', container.dragenter)
         containerRef.current.addEventListener('dragover', container.dragover)
         containerRef.current.addEventListener('dragleave', container.dragleave)
         containerRef.current.addEventListener('drop', container.drop)
+
+        dragDataRef.current.dragComp = dragComp
       }),
 
       dragend: useCallbackRef((e: React.DragEvent<HTMLDivElement>) => {
@@ -56,6 +63,19 @@ export const VisualEditor: FC<{
       }),
       drop: useCallbackRef((e: DragEvent) => {
         console.log('!!!', 'add new block')
+
+        props.onChange({
+          ...props.value,
+          block: [
+            ...props.value.block,
+            createVisualBlock({
+              top: e.offsetY,
+              left: e.offsetX,
+              comp: dragDataRef.current.dragComp!
+            })
+          ]
+        })
+
       }),
     }
 
@@ -70,7 +90,7 @@ export const VisualEditor: FC<{
             key={item.key}
             className="visual-editor-menu-item"
             draggable
-            onDragStart={menuDraggier.dragstart}
+            onDragStart={e => menuDraggier.dragstart(e, item)}
             onDragEnd={menuDraggier.dragend}
           >
             {item.preview()}

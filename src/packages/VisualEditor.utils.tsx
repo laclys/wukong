@@ -53,4 +53,13 @@ export function createVisualConfig () {
   }
 }
 
+/* 创建一个block数据 */
+export function createVisualBlock({ top, left, comp }: { top: number, left: number, comp: VisualEditorComp}): VisualEditorBlock {
+  return {
+    componentKey: comp.key,
+    top,
+    left
+  }
+}
+
 export type VisualConfig = ReturnType<typeof createVisualConfig>
