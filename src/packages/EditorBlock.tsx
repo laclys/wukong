@@ -5,6 +5,7 @@ import { VisualConfig, VisualEditorBlock } from './VisualEditor.utils'
 export const EditorBlock: FC<{
   block: VisualEditorBlock
   config: VisualConfig
+  onMousedown?: (e: React.MouseEvent<HTMLDivElement>) => void
 }> = (props) => {
   const elRef = useRef({} as HTMLDivElement)
   const { forceupdate } = useUpdate()
@@ -36,7 +37,7 @@ export const EditorBlock: FC<{
   }
 
   return (
-    <div className="visual-editor-block" style={styles} ref={elRef}>
+    <div className="visual-editor-block" style={styles} ref={elRef} onMouseDown={props.onMousedown} >
       {render}
     </div>
   )
