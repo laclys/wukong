@@ -7,7 +7,7 @@ $ibl: #ebeef5; // 边框色(轻)
 $itc: #314659; // 字体颜色
 $icc: rgba(0, 0, 0, 0.45); // 图标颜色
 $boxShadowColor: #f0f1f2;
-$primary: #409EFF;
+$primary: #409eff;
 
 .visual-editor {
   position: fixed;
@@ -84,7 +84,6 @@ $primary: #409EFF;
         font-size: 12px;
         color: white;
         background: $primary;
-
       }
     }
 
@@ -94,7 +93,7 @@ $primary: #409EFF;
       bottom: 0;
       width: $operatorSize;
       background: white;
-      border-left: 1px solid $ibc;;
+      border-left: 1px solid $ibc;
     }
 
     &.visual-editor-body {
@@ -112,14 +111,29 @@ $primary: #409EFF;
       .visual-editor-container {
         background: white;
 
-        // &::after {
-        //   position: absolute;
-        //   content: '';
-        //   top: 0;
-        //   left: 0;
-        //   right: 0;
-        //   bottom: 0;
-        // }
+        .visual-editor-block {
+          // &::after {
+          //   position: absolute;
+          //   content: '';
+          //   top: 0;
+          //   left: 0;
+          //   right: 0;
+          //   bottom: 0;
+          // }
+
+          &.visual-editor-block-focus {
+            &::before {
+              content: '';
+              position: absolute;
+              $size: 4px;
+              top: -$size;
+              left: -$size;
+              right: -$size;
+              bottom: -$size;
+              border: dashed 1px $primary;
+            }
+          }
+        }
       }
     }
   }

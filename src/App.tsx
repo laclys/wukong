@@ -62,12 +62,20 @@ export default () => {
         height: 500,
         width: 800,
       },
-      block: [
+      blocks: [
         {
           componentKey: 'text',
           top: 100,
           left: 100,
-          ajustPosition: false
+          ajustPosition: false,
+          focus: false
+        },
+        {
+          componentKey: 'button',
+          top: 200,
+          left: 200,
+          ajustPosition: false,
+          focus: false
         },
       ],
     }

@@ -5,6 +5,8 @@ export interface VisualEditorBlock {
   left: number
   /* 是否需要调整位置 */
   ajustPosition: boolean
+  /* 当前是否被选中 */
+  focus: boolean
 }
 
 /* 
@@ -15,7 +17,7 @@ export interface VisualEditorValue {
     height: number
     width: number
   }
-  block: VisualEditorBlock[]
+  blocks: VisualEditorBlock[]
 }
 
 /* 
@@ -61,7 +63,8 @@ export function createVisualBlock({ top, left, comp }: { top: number, left: numb
     componentKey: comp.key,
     top,
     left,
-    ajustPosition: true
+    ajustPosition: true,
+    focus: false
   }
 }
 

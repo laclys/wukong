@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { FC, useMemo, useRef, useEffect } from 'react'
 import { useUpdate } from './hooks/useUpdate'
 import { VisualConfig, VisualEditorBlock } from './VisualEditor.utils'
@@ -29,6 +30,14 @@ export const EditorBlock: FC<{
     }
   }, [props.block.top, props.block.left, props.block.ajustPosition])
 
+
+  const classes = useMemo(() => classNames([
+    'visual-editor-block',
+    {
+      'visual-editor-block-focus': props.block.focus
+    }
+  ]), [props.block.focus])
+
   const comp = props.config.compMap[props.block.componentKey]
 
   let render: any
@@ -37,7 +46,7 @@ export const EditorBlock: FC<{
   }
 
   return (
-    <div className="visual-editor-block" style={styles} ref={elRef} onMouseDown={props.onMousedown} >
+    <div className={classes} style={styles} ref={elRef} onMouseDown={props.onMousedown} >
       {render}
     </div>
   )
