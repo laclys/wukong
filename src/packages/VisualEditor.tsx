@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef } from 'react'
+import { FC, useMemo, useRef, useState } from 'react'
 import { useCallbackRef } from './hooks/useCallbackRef'
 import { EditorBlock } from './EditorBlock'
 import {
@@ -17,6 +17,9 @@ export const VisualEditor: FC<{
   config: VisualConfig
 }> = (props) => {
   // console.log('props', props)
+
+  const [preview, setPreview] = useState(false)
+  const [editing, setEditing] = useState(false)
 
   const containerRef = useRef({} as HTMLDivElement)
 
@@ -177,6 +180,7 @@ export const VisualEditor: FC<{
     }
   })()
 
+  /* block在container中 */
   const blockDraggier = (() => {
     const dragData = useRef({
       startX: 0, // 拖拽开始鼠标left值
@@ -218,6 +222,104 @@ export const VisualEditor: FC<{
     }
   })()
 
+  const buttons: {
+    label: string | (() => string)
+    icon: string | (() => string)
+    tip?: string | (() => string)
+    handler: () => void
+  }[] = [
+    {
+      label: '撤销',
+      icon: 'icon-back',
+      handler: () => {
+        // commander.undo
+      },
+      tip: 'ctrl+z',
+    },
+    {
+      label: '重做',
+      icon: 'icon-forward',
+      handler: () => {
+        // commander.redo
+      },
+      tip: 'ctrl+y, ctrl+shift+z',
+    },
+    {
+      label: () => (preview ? '编辑' : '预览'),
+      icon: () => (preview ? 'icon-edit' : 'icon-browse'),
+      handler: () => {
+        if (!preview) {
+          methods.clearFocus()
+        }
+        setPreview(!preview)
+      },
+    },
+    {
+      label: '导入',
+      icon: 'icon-import',
+      handler: async () => {
+        /*         const text = await $$dialog.textarea('', {
+          title: '请输入导入的JSON字符串',
+        })
+        try {
+          const data = JSON.parse(text || '')
+          commander.updateValue(data)
+        } catch (e) {
+          console.error(e)
+          notification.open({
+            message: '导入失败！',
+            description: '导入的数据格式不正常，请检查！',
+          })
+        } */
+      },
+    },
+    {
+      label: '导出',
+      icon: 'icon-export',
+      handler: () => {
+        /*         $$dialog.textarea(JSON.stringify(props.value), {
+            editReadonly: true,
+            title: '导出的JSON数据',
+          }) */
+      },
+    },
+    /*     {
+      label: '置顶',
+      icon: 'icon-place-top',
+      handler: () => commander.placeTop(),
+      tip: 'ctrl+up',
+    },
+    {
+      label: '置底',
+      icon: 'icon-place-bottom',
+      handler: () => commander.placeBottom(),
+      tip: 'ctrl+down',
+    }, */
+    {
+      label: '删除',
+      icon: 'icon-delete',
+      handler: () => {
+        // commander.delete()
+      },
+      tip: 'ctrl+d, backspace, delete',
+    },
+    {
+      label: '清空',
+      icon: 'icon-reset',
+      handler: () => {
+        // commander.clear()
+      },
+    },
+    {
+      label: '关闭',
+      icon: 'icon-close',
+      handler: () => {
+        methods.clearFocus()
+        setEditing(false)
+      },
+    },
+  ]
+
   return (
     <div className="visual-editor">
       <div className="visual-editor-menu">
@@ -234,7 +336,20 @@ export const VisualEditor: FC<{
           </div>
         ))}
       </div>
-      <div className="visual-editor-head"></div>
+      <div className="visual-editor-head">
+        {buttons.map((btn, idx) => {
+
+          const label = typeof btn.label === 'function' ? btn.label() : btn.label
+          const icon = typeof btn.icon === 'function' ? btn.icon() : btn.icon
+
+          return (
+            <div className='visual-editor-head-btn' key={`${idx}_BTN`} >
+              <i className={`iconfont ${icon}`} ></i>
+              <span>{label}</span>
+            </div>
+          )
+        })}
+      </div>
       <div className="visual-editor-operator"></div>
       <div className="visual-editor-body">
         <div
