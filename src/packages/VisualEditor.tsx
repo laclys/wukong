@@ -142,6 +142,7 @@ export const VisualEditor: FC<{
       // console.log('点击了block！！！')
 
       if (e.shiftKey) {
+        console.log('press shift')
         /* 如果按住shift，如果此时没有选中block，就选中，否则状态取反 */
         if (focusData.focus.length <= 1) {
           block.focus = true
