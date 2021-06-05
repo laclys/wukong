@@ -154,13 +154,16 @@ export const VisualEditor: FC<{
           methods.clearFocus(block)
         }
       }
+      setTimeout(() => {
+        blockDraggier.mousedown(e)
+      })
     }
 
     const container = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target !== e.currentTarget) {
         return
       }
-      console.log('点击了container！！！')
+      // console.log('点击了container！！！')
       if (!e.shiftKey) {
         // 点击且按住shift键
         methods.clearFocus()
@@ -170,6 +173,47 @@ export const VisualEditor: FC<{
     return {
       block,
       container,
+    }
+  })()
+
+  const blockDraggier = (() => {
+    const dragData = useRef({
+      startX: 0, // 拖拽开始鼠标left值
+      startY: 0, // 拖拽开始鼠标top值
+      startPosArray: [] as { top: number; left: number }[], // 拖拽开始时候所有选中block的top值、left值
+    })
+
+    const mousedown = useCallbackRef((e: React.MouseEvent) => {
+      document.addEventListener('mousemove', mousemove)
+      document.addEventListener('mouseup', mouseup)
+
+      dragData.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        startPosArray: focusData.focus.map(({ top, left }) => ({ top, left })),
+      }
+    })
+    const mousemove = useCallbackRef((e: MouseEvent) => {
+      const { startX, startY, startPosArray } = dragData.current
+      const { clientX: moveX, clientY: moveY } = e
+      const durX = moveX - startX,
+        durY = moveY - startY
+      focusData.focus.forEach((block, idx) => {
+        const { left, top } = startPosArray[idx]
+
+        block.left = left + durX
+        block.top = top + durY
+      })
+      methods.updateBlocks(props.value.blocks)
+    })
+
+    const mouseup = useCallbackRef((e: MouseEvent) => {
+      document.removeEventListener('mousemove', mousemove)
+      document.removeEventListener('mouseup', mouseup)
+    })
+
+    return {
+      mousedown,
     }
   })()
 
