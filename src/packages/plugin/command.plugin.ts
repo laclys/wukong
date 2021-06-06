@@ -14,7 +14,7 @@ interface Command {
   /* 命令执行完，后需要返回undo、redo执行动作 */
   execute: (...args: any[]) => CommandExecute
   /* 命令执行完之后，是否需要将命令执行得到的undo和 redo存在命令队列 (例如：全选、撤销···)*/
-  followQueue: boolean
+  followQueue?: boolean
   /* 命令初始化函数 */
   init?: () => () => void | undefined
 }
