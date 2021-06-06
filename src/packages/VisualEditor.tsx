@@ -36,6 +36,10 @@ export const VisualEditor: FC<{
     props.value.blocks.forEach((block) => {
       ;(block.focus ? focus : unfocus).push(block)
     })
+
+    // console.log('focus', focus)
+    // console.log('unfocus', unfocus)
+    // console.log('blocks', props.value.blocks)
     return {
       focus,
       unfocus,
