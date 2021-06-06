@@ -10,6 +10,7 @@ import {
 } from './VisualEditor.utils'
 
 import './VisualEditor.scss'
+import { useVisualCommander } from './VisualEditor.commander'
 
 export const VisualEditor: FC<{
   value: VisualEditorValue
@@ -226,6 +227,13 @@ export const VisualEditor: FC<{
     }
   })()
 
+  /* 命令管理 */
+  const commander = useVisualCommander({
+    value: props.value,
+    focusData,
+    updateBlocks: methods.updateBlocks
+  })
+
   const buttons: {
     label: string | (() => string)
     icon: string | (() => string)
@@ -302,9 +310,7 @@ export const VisualEditor: FC<{
     {
       label: '删除',
       icon: 'icon-delete',
-      handler: () => {
-        // commander.delete()
-      },
+      handler: () => commander.delete(),
       tip: 'ctrl+d, backspace, delete',
     },
     {
@@ -347,7 +353,7 @@ export const VisualEditor: FC<{
           const icon = typeof btn.icon === 'function' ? btn.icon() : btn.icon
 
           return (
-            <div className='visual-editor-head-btn' key={`${idx}_BTN`} >
+            <div className='visual-editor-head-btn' key={`${idx}_BTN`} onClick={btn.handler} >
               <i className={`iconfont ${icon}`} ></i>
               <span>{label}</span>
             </div>
