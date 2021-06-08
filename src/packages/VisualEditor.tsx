@@ -243,17 +243,13 @@ export const VisualEditor: FC<{
     {
       label: '撤销',
       icon: 'icon-back',
-      handler: () => {
-        // commander.undo
-      },
+      handler: () => commander.undo(),
       tip: 'ctrl+z',
     },
     {
       label: '重做',
       icon: 'icon-forward',
-      handler: () => {
-        // commander.redo
-      },
+      handler: () => commander.redo(),
       tip: 'ctrl+y, ctrl+shift+z',
     },
     {

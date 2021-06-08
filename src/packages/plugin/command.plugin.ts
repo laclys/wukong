@@ -106,11 +106,8 @@ export function useCommander() {
       )
       state.destroyList.push(keyboardEvent.init())
     })
-    /**
-     * 注册撤回命令（撤回命令执行结果不需要进入命令队列）
-     * @author  韦胜健
-     * @date    2021/1/22 11:36 下午
-     */
+
+    /* 注册撤回命令（撤回命令执行结果不需要进入命令队列） */
     useRegistry({
       name: 'undo',
       keyboard: 'ctrl+z',
@@ -132,11 +129,7 @@ export function useCommander() {
       },
     })
 
-    /**
-     * 注册重做命令（重做命令执行结果不需要进入命令队列）
-     * @author  韦胜健
-     * @date    2021/1/22 11:36 下午
-     */
+    /* 注册重做命令（重做命令执行结果不需要进入命令队列） */
     useRegistry({
       name: 'redo',
       keyboard: ['ctrl+y', 'ctrl+shift+z'],

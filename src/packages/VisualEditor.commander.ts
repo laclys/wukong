@@ -41,9 +41,12 @@ export function useVisualCommander({
       }
     },
   })
+  
   commander.useInit()
 
   return {
     delete: () => commander.state.commands.delete(),
+    undo: () => commander.state.commands.undo(),
+    redo: () => commander.state.commands.redo(),
   }
 }
