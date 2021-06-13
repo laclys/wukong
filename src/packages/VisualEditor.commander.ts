@@ -1,13 +1,15 @@
 import { useRef } from 'react'
+import deepcopy from 'deepcopy'
 import { useCallbackRef } from './hooks/useCallbackRef'
 import { useCommander } from './plugin/command.plugin'
-import deepcopy from 'deepcopy'
 import { VisualEditorBlock, VisualEditorValue } from './VisualEditor.utils'
 
 export function useVisualCommander({
   value,
   focusData,
   updateBlocks,
+  dragstart,
+  dragend,
 }: {
   value: VisualEditorValue
   focusData: {
@@ -15,6 +17,8 @@ export function useVisualCommander({
     unfocus: VisualEditorBlock[]
   }
   updateBlocks: (blocks: VisualEditorBlock[]) => void
+  dragstart: { on: (cb: () => void) => void; off: (cb: () => void) => void }
+  dragend: { on: (cb: () => void) => void; off: (cb: () => void) => void }
 }) {
   const commander = useCommander()
 
@@ -41,7 +45,48 @@ export function useVisualCommander({
       }
     },
   })
-  
+
+  /* drag command */
+  ;(() => {
+    const dragData = useRef({ before: null as null | VisualEditorBlock[] })
+    const handler = {
+      dragstart: useCallbackRef(
+        () => (dragData.current.before = deepcopy(value.blocks))
+      ),
+      dragend: useCallbackRef(() => commander.state.commands.drag()),
+    }
+    /**
+     * 拖拽命令，适用于三种情况：
+     * - 从菜单拖拽组件到容器画布；
+     * - 在容器中拖拽组件调整位置
+     * - 拖拽调整组件的宽度和高度；
+     */
+    commander.useRegistry({
+      name: 'drag',
+      init() {
+        dragData.current = { before: null }
+        dragstart.on(handler.dragstart)
+        dragend.on(handler.dragend)
+        return () => {
+          dragstart.off(handler.dragstart)
+          dragend.off(handler.dragend)
+        }
+      },
+      execute() {
+        let before = deepcopy(dragData.current.before!)
+        let after = deepcopy(value.blocks)
+        return {
+          redo: () => {
+            updateBlocks(deepcopy(after))
+          },
+          undo: () => {
+            updateBlocks(deepcopy(before))
+          },
+        }
+      },
+    })
+  })()
+
   commander.useInit()
 
   return {
