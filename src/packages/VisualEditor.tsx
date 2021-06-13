@@ -8,9 +8,10 @@ import {
   VisualEditorValue,
   VisualEditorBlock,
 } from './VisualEditor.utils'
+import { useVisualCommander } from './VisualEditor.commander'
+import { createEvent } from './plugin/event'
 
 import './VisualEditor.scss'
-import { useVisualCommander } from './VisualEditor.commander'
 
 export const VisualEditor: FC<{
   value: VisualEditorValue
@@ -21,6 +22,9 @@ export const VisualEditor: FC<{
 
   const [preview, setPreview] = useState(false)
   const [editing, setEditing] = useState(false)
+
+  const [dragstart] = useState(() => createEvent())
+  const [dragend] = useState(() => createEvent())
 
   const containerRef = useRef({} as HTMLDivElement)
 
@@ -92,6 +96,7 @@ export const VisualEditor: FC<{
           containerRef.current.addEventListener('drop', container.drop)
 
           dragDataRef.current.dragComp = dragComp
+          dragstart.emit()
         }
       ),
 
@@ -121,18 +126,17 @@ export const VisualEditor: FC<{
       }),
       drop: useCallbackRef((e: DragEvent) => {
         console.log('!!!', 'add new block')
-
-        props.onChange({
-          ...props.value,
-          blocks: [
-            ...props.value.blocks,
-            createVisualBlock({
-              top: e.offsetY,
-              left: e.offsetX,
-              comp: dragDataRef.current.dragComp!,
-            }),
-          ],
-        })
+        methods.updateBlocks([
+          ...props.value.blocks,
+          createVisualBlock({
+            top: e.offsetY,
+            left: e.offsetX,
+            comp: dragDataRef.current.dragComp!,
+          }),
+        ])
+       setTimeout(() => {
+         dragend.emit()
+       })
       }),
     }
 
@@ -231,7 +235,9 @@ export const VisualEditor: FC<{
   const commander = useVisualCommander({
     value: props.value,
     focusData,
-    updateBlocks: methods.updateBlocks
+    updateBlocks: methods.updateBlocks,
+    dragstart,
+    dragend
   })
 
   const buttons: {
