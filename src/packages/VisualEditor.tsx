@@ -134,9 +134,9 @@ export const VisualEditor: FC<{
             comp: dragDataRef.current.dragComp!,
           }),
         ])
-       setTimeout(() => {
-         dragend.emit()
-       })
+        setTimeout(() => {
+          dragend.emit()
+        })
       }),
     }
 
@@ -195,6 +195,7 @@ export const VisualEditor: FC<{
       startX: 0, // 拖拽开始鼠标left值
       startY: 0, // 拖拽开始鼠标top值
       startPosArray: [] as { top: number; left: number }[], // 拖拽开始时候所有选中block的top值、left值
+      dragging: false, // 是否处于拖拽状态
     })
 
     const mousedown = useCallbackRef((e: React.MouseEvent) => {
@@ -205,6 +206,7 @@ export const VisualEditor: FC<{
         startX: e.clientX,
         startY: e.clientY,
         startPosArray: focusData.focus.map(({ top, left }) => ({ top, left })),
+        dragging: false,
       }
     })
     const mousemove = useCallbackRef((e: MouseEvent) => {
@@ -219,11 +221,19 @@ export const VisualEditor: FC<{
         block.top = top + durY
       })
       methods.updateBlocks(props.value.blocks)
+
+      if (!dragData.current.dragging) {
+        dragData.current.dragging = true
+        dragstart.emit()
+      }
     })
 
     const mouseup = useCallbackRef((e: MouseEvent) => {
       document.removeEventListener('mousemove', mousemove)
       document.removeEventListener('mouseup', mouseup)
+      if (dragData.current.dragging) {
+        dragend.emit()
+      }
     })
 
     return {
@@ -237,7 +247,7 @@ export const VisualEditor: FC<{
     focusData,
     updateBlocks: methods.updateBlocks,
     dragstart,
-    dragend
+    dragend,
   })
 
   const buttons: {
@@ -350,13 +360,17 @@ export const VisualEditor: FC<{
       </div>
       <div className="visual-editor-head">
         {buttons.map((btn, idx) => {
-
-          const label = typeof btn.label === 'function' ? btn.label() : btn.label
+          const label =
+            typeof btn.label === 'function' ? btn.label() : btn.label
           const icon = typeof btn.icon === 'function' ? btn.icon() : btn.icon
 
           return (
-            <div className='visual-editor-head-btn' key={`${idx}_BTN`} onClick={btn.handler} >
-              <i className={`iconfont ${icon}`} ></i>
+            <div
+              className="visual-editor-head-btn"
+              key={`${idx}_BTN`}
+              onClick={btn.handler}
+            >
+              <i className={`iconfont ${icon}`}></i>
               <span>{label}</span>
             </div>
           )
