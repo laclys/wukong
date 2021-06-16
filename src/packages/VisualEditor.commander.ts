@@ -25,7 +25,7 @@ export function useVisualCommander({
   /* 删除! */
   commander.useRegistry({
     name: 'delete',
-    keyboard: ['backspace', 'delete', 'ctrl+d'],
+    keyboard: ['backspace', 'delete', 'ctrl+d', 'command+d'],
     execute() {
       console.log('执行删除命令')
       // console.log(this.data)
@@ -41,6 +41,22 @@ export function useVisualCommander({
         undo: () => {
           // console.log('撤回删除命令')
           updateBlocks(deepcopy(data.before))
+        },
+      }
+    },
+  })
+
+  /* 全选~! */
+  commander.useRegistry({
+    name: 'selectAll',
+    followQueue: false,
+    keyboard: ['command+a', 'ctrl+a'],
+    execute() {
+      console.log('执行全选命令')
+      return {
+        redo: () => {
+          value.blocks.forEach(i => i.focus = true)
+          updateBlocks(value.blocks)
         },
       }
     },

@@ -18,12 +18,15 @@ interface Command {
   /* 命令初始化函数 */
   init?: () => () => void | undefined
 }
+/* 
+note: command execute执行完后，需返回redo、undo。execute执行完立刻执行redo。撤销执行undo，重做执行undo
+*/
 
 export function useCommander() {
   const [state] = useState({
     current: -1, // 当命令队列中，最后执行的命令返回CommandExecute对象
     queue: [] as CommandExecute[], // 命令队列
-    commandArray: [] as { current: Command }[], //预定义命令的数组
+    commandArray: [] as { current: Command }[], //预定义命令的数组 一个引用 要最新值！！！！
     commands: {} as Record<string, (...args: any[]) => void>, // 通过 command name执行 command动作的包装
     destroyList: [] as ((() => void) | undefined)[], // 所有命令在组件销毁之前，需执行销毁副作用的函数数组
   })
@@ -80,10 +83,11 @@ export function useCommander() {
           return
         }
         const keys = Array.isArray(keyboard) ? keyboard : [keyboard]
+        // console.log('keyNames', keyNames)
         if (keys.indexOf(keyNames) > -1) {
-          state.commands[name]()
           e.stopPropagation()
           e.preventDefault()
+          state.commands[name]()
         }
       })
     }

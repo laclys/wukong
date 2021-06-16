@@ -2,6 +2,7 @@ export const KeyboardCode = {
   16: 'shift',
   17: 'ctrl',
   18: 'alt',
+  91: 'command',
 
   8: 'backspace',
   9: 'tab',
